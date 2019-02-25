@@ -1,5 +1,15 @@
 use_frameworks!
 
 target 'Pecan_Example' do
-  pod 'Pecan', :path => '../'
+  pod 'Pecan',      :path => '../Pecan.podspec'
+  pod 'TestModule', :path => '../TestModule.podspec'
+end
+
+
+module Pod
+  class PodTarget
+    def static_framework?
+      return true
+    end
+  end
 end

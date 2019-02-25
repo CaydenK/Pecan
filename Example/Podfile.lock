@@ -1,16 +1,21 @@
 PODS:
   - Pecan (0.1.0)
+  - TestModule (0.1.0)
 
 DEPENDENCIES:
-  - Pecan (from `../`)
+  - Pecan (from `../Pecan.podspec`)
+  - TestModule (from `../TestModule.podspec`)
 
 EXTERNAL SOURCES:
   Pecan:
-    :path: "../"
+    :path: "../Pecan.podspec"
+  TestModule:
+    :path: "../TestModule.podspec"
 
 SPEC CHECKSUMS:
-  Pecan: 6c1d891138306c7e62cb51c5e76d90a5fd117a17
+  Pecan: 6e51d59f87c19cbf7f6436f8d6b33103b2eca2d8
+  TestModule: 1c5a8aeda3121038c8dd4b66bd6626f5f273eee4
 
-PODFILE CHECKSUM: 9e0c0745b8be6f8202ce796b5d2de0ba4385372f
+PODFILE CHECKSUM: 2e196864843b357745bdf3865fe3b8c4ee9d1441
 
 COCOAPODS: 1.6.1
