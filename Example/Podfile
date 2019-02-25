@@ -1,0 +1,5 @@
+use_frameworks!
+
+target 'Pecan_Example' do
+  pod 'Pecan', :path => '../'
+end

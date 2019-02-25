@@ -1,0 +1,16 @@
+PODS:
+  - Pecan (0.1.0)
+
+DEPENDENCIES:
+  - Pecan (from `../`)
+
+EXTERNAL SOURCES:
+  Pecan:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Pecan: 6c1d891138306c7e62cb51c5e76d90a5fd117a17
+
+PODFILE CHECKSUM: 9e0c0745b8be6f8202ce796b5d2de0ba4385372f
+
+COCOAPODS: 1.6.1
