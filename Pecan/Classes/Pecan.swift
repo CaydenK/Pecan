@@ -6,7 +6,18 @@
 //
 
 import Foundation
+import WebKit
 
-class Pecan {
+open class PecanEngine {
+    public static var debug : Bool = false
+    
+    public static func start() {
+        UIWebView().loadHTMLString("", baseURL: nil) //start WebThread
+        WKWebView().loadHTMLString("", baseURL: nil) //start thread named 'JavaScriptCore bmalloc scavenger'
+    }
+    
+    public static func test2333() {
+        
+    }
     
 }
