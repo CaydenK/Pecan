@@ -48,7 +48,7 @@ class WebViewDelegate : NSObject, WKUIDelegate {
         
         //24F20539 为 ferrariBridge 字符串进行adler32算法运算后获得，降低prompt正常用法和bridge的碰撞概率
         if prompt.hasPrefix("ferrariBridge_24F20539") {
-            completionHandler("")
+            JSCenter.disposePrompt(prompt: prompt as NSString, defaultText: defaultText! as NSString, completionHandler: completionHandler)
         } else if self.realUIDelegate != nil && self.realUIDelegate!.responds(to: #function) {
             self.realUIDelegate?.webView!(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: completionHandler)
         } else {

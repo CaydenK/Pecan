@@ -27,7 +27,7 @@ TODO: Add long description of the pod here.
   s.author           = { 'CaydenK' => 'caydenk@163.com' }
   s.source           = { :git => 'https://github.com/CaydenK/TestModule.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '8.0'
 
   s.source_files = 'Pecan/Classes/**/*'
   s.static_framework = true

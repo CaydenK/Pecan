@@ -13,8 +13,8 @@ EXTERNAL SOURCES:
     :path: "../TestModule.podspec"
 
 SPEC CHECKSUMS:
-  Pecan: 6e51d59f87c19cbf7f6436f8d6b33103b2eca2d8
-  TestModule: 1c5a8aeda3121038c8dd4b66bd6626f5f273eee4
+  Pecan: 2519cae646afe68e4d79b3a40b0b1abd667c6acf
+  TestModule: 9c0f6e3d5d6f2ec83df9a9a3fe36275b9aa0c6f6
 
 PODFILE CHECKSUM: 2e196864843b357745bdf3865fe3b8c4ee9d1441
 
