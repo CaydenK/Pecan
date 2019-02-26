@@ -1,0 +1,35 @@
+
+<html>
+    
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <meta content="text/html; charset=utf-8" http-equiv="content-type">
+                <title>
+                    Pecan
+                </title>
+<script>
+    function testNative() {
+        var data = [];
+        for (var i  = 0; i < 10000000; i++) {
+            data.push({key:"valuevalue"});
+        }
+        
+        var jsonString = prompt("ferrariBridge_24F20539",JSON.stringify(data));
+        
+        var jsonData = JSON.parse(jsonString);
+        
+        console.log(jsonData.length)
+    }
+    </script>
+                
+    </head>
+    
+    <body>
+        
+        <p>
+        <br /><input type="button" value="testNative" onclick=testNative() />
+    </body>
+    
+    
+    
+</html>

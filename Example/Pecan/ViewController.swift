@@ -22,8 +22,10 @@ class ViewController: UIViewController,WKUIDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(self.webview)
-        self.webview.load(URLRequest(url: URL(string: "https://www.baidu.com")!))
-        
+        let url =  Bundle.main.url(forResource: "test", withExtension: "html")
+//        self.webview.load(URLRequest(url: URL(string: "https://www.baidu.com")!))
+        self.webview.load(URLRequest(url: url!))
+
         print(self.webview.uiDelegate as Any)
     }
 

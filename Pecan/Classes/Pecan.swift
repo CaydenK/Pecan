@@ -15,9 +15,9 @@ open class PecanEngine {
         UIWebView().loadHTMLString("", baseURL: nil) //start WebThread
         WKWebView().loadHTMLString("", baseURL: nil) //start thread named 'JavaScriptCore bmalloc scavenger'
         
-        URLProtocol.registerClass(WebURLProtocol.self)
-        URLProtocol.pecan.registerScheme(scheme: "https")
-        URLProtocol.pecan.registerScheme(scheme: "http")
+//        URLProtocol.registerClass(WebURLProtocol.self)
+//        URLProtocol.pecan.registerScheme(scheme: "https")
+//        URLProtocol.pecan.registerScheme(scheme: "http")
     }
     
     public static func test2333() {

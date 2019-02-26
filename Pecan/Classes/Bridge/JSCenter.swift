@@ -10,8 +10,9 @@ import Foundation
 class JSCenter {
 
     static func disposePrompt(prompt:NSString, defaultText:NSString, completionHandler: @escaping (String?) -> Void) {
+        print(defaultText.length)
         
-        completionHandler("")
+        completionHandler(defaultText as String)
         
     }
 
