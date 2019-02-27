@@ -2,7 +2,8 @@ use_frameworks!
 
 target 'Pecan_Example' do
   pod 'Pecan',      :path => '../Pecan.podspec'
-  pod 'TestModule', :path => '../TestModule.podspec'
+#  pod 'TestModule', :path => '../TestModule.podspec'
+  
 end
 
 
@@ -10,6 +11,17 @@ module Pod
   class PodTarget
     def static_framework?
       return true
+    end
+  end
+end
+
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == "YYCache"
+      target.build_configurations.each do |config|
+        config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = "YES"
+      end
     end
   end
 end

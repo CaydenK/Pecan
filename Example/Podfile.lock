@@ -1,12 +1,10 @@
 PODS:
   - Pecan (0.1.0):
     - YYCache
-  - TestModule (0.1.0)
   - YYCache (1.0.4)
 
 DEPENDENCIES:
   - Pecan (from `../Pecan.podspec`)
-  - TestModule (from `../TestModule.podspec`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -15,14 +13,11 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Pecan:
     :path: "../Pecan.podspec"
-  TestModule:
-    :path: "../TestModule.podspec"
 
 SPEC CHECKSUMS:
   Pecan: ed97d54cf93e0cbaa5cb4df453fa34ff5ce798e7
-  TestModule: 9c0f6e3d5d6f2ec83df9a9a3fe36275b9aa0c6f6
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
 
-PODFILE CHECKSUM: 2e196864843b357745bdf3865fe3b8c4ee9d1441
+PODFILE CHECKSUM: 81748bd63d19ca5840f56d8f87cbdb3bafe49818
 
 COCOAPODS: 1.6.1

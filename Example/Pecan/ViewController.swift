@@ -9,11 +9,21 @@
 import UIKit
 import Pecan
 import WebKit
-import TestModule
+//import TestModule
 
 class ViewController: UIViewController,WKUIDelegate {
     lazy var webview: Pecan.WebView = {
+        let hookAjaxPath = Bundle.main.path(forResource: "HookAjax", ofType: "js")
+        
+        let hookAjax = try? String(contentsOfFile: hookAjaxPath!)
+        
         let webConfiguration = WKWebViewConfiguration()
+        let ucc = WKUserContentController()
+        let us = WKUserScript(source: hookAjax ?? "", injectionTime: .atDocumentStart, forMainFrameOnly: false)
+        ucc.addUserScript(us)
+        
+        webConfiguration.userContentController = ucc
+        
         let _webview = Pecan.WebView(frame: self.view.bounds, configuration: webConfiguration)
         _webview.uiDelegate = self
         return _webview

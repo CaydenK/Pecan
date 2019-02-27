@@ -1,35 +1,61 @@
-
 <html>
-    
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-            <meta content="text/html; charset=utf-8" http-equiv="content-type">
-                <title>
-                    Pecan
-                </title>
-<script>
-    function testNative() {
-        var data = [];
-        for (var i  = 0; i < 10000000; i++) {
-            data.push({key:"valuevalue"});
+
+<head>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <title>
+        Pecan
+    </title>
+    <script>
+        function testNative() {
+            var data = [];
+            for (var i = 0; i < 10000000; i++) {
+                data.push({ key: "valuevalue" });
+            }
+
+            var jsonString = prompt("ferrariBridge_24F20539", JSON.stringify(data));
+
+            var jsonData = JSON.parse(jsonString);
+
+            console.log(jsonData.length)
         }
-        
-        var jsonString = prompt("ferrariBridge_24F20539",JSON.stringify(data));
-        
-        var jsonData = JSON.parse(jsonString);
-        
-        console.log(jsonData.length)
-    }
+
+        function testAjax() {
+            var xmlhttp;
+                if (window.XMLHttpRequest)
+                {// code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+                }
+                else
+                {// code for IE6, IE5
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange=function()
+                {
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                    {
+                        document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+                    }
+                }
+                xmlhttp.open("POST","http://www.w3school.com.cn/ajax/demo_post2.asp",true);
+                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xmlhttp.send("fname=Bill&lname=Gates");
+        }
     </script>
-                
-    </head>
-    
-    <body>
-        
-        <p>
+
+</head>
+
+<body>
+
+    <p>
         <br /><input type="button" value="testNative" onclick=testNative() />
-    </body>
-    
-    
-    
+        <br /><input type="button" value="testAjax" onclick=testAjax() />
+    </p>
+    <div id="myDiv"></div>
+
+</body>
+
+
+
 </html>
