@@ -30,6 +30,7 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'Pecan/Classes/**/*'
+  s.resources = 'Pecan/Assets/**/*'
   s.static_framework = true
   
   # s.resource_bundles = {
