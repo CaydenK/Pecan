@@ -1,5 +1,7 @@
 PODS:
+  - HandyJSON (4.2.1)
   - Pecan (0.1.0):
+    - HandyJSON
     - YYCache
   - YYCache (1.0.4)
 
@@ -8,6 +10,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - HandyJSON
     - YYCache
 
 EXTERNAL SOURCES:
@@ -15,7 +18,8 @@ EXTERNAL SOURCES:
     :path: "../Pecan.podspec"
 
 SPEC CHECKSUMS:
-  Pecan: ed97d54cf93e0cbaa5cb4df453fa34ff5ce798e7
+  HandyJSON: d0c5fc80204f29056d59d3e5c4587fa0b16b60a8
+  Pecan: 3755dbe870718e379c6c430d339fce625778bee5
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
 
 PODFILE CHECKSUM: 81748bd63d19ca5840f56d8f87cbdb3bafe49818
