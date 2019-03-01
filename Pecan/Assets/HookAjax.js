@@ -152,31 +152,70 @@
             })
             
             var msgJSON = JSON.stringify(message);
-            var resultJSON = resultJSON = prompt("ferrariBridge_24F20539", msgJSON);
-            var result = JSON.parse(resultJSON);
-            if (result["code"] === 1) {
-                return result["data"];
-            } else {
-                return null
+            try {
+                window.webkit.messageHandlers.PecanProxy_1518040A.postMessage(msgJSON);
+            } catch (error) {
+                console.log('WKWebView post message');
             }
-            // var resultJSON = null;
-            // if (window.FRRWebEngine === 0) {
-            //     resultJSON = prompt("ferrariBridge_24F20539", msgJSON);
-            // } else if (window.FRRWebEngine === 1) {
-            //     resultJSON = FerrariNative.jsbridgeNativeDisposeWithMesage(msgJSON);
-            // }
-            // var result = JSON.parse(resultJSON);
-            // if (result["code"] === 1) {
-            //     return result["data"];
-            // } else {
-            //     return null
-            // }
+          
+
         },
-        callJS: (selector, callbackID, params) => {
-            FRREvent.execHandler(selector, callbackID, params);
-            FRREvent.removeHandler(selector);
+        callJS: (handlerID, action, params) => {
+            AjaxBridgeEvent.execHandler(handlerID, action, params);
+        },
+        removeCallback: (handlerID) => {
+            AjaxBridgeEvent.removeHandler(handlerID);
         }
     }
     window.AjaxBridge = AjaxBridge
 })()
+
+// (function () {
+//     if (window.imy_realxhr) {
+//         return
+//     }
+//     window.imy_realxhr = XMLHttpRequest;
+//     var timestamp = new Date().getTime();
+//     timestamp = parseInt((timestamp / 1000) % 100000);
+//     var global_index = timestamp + 1;
+//     var global_map = {};
+//     window.imy_realxhr_callback = function (id, message) {
+//         var hookAjax = global_map[id];
+//         if (hookAjax) {
+//             hookAjax.callbackNative(message)
+//         }
+//         global_map[id] = null
+//     };
+
+//     hookAjax.prototype.sendNative = function (data) {
+//         this.request_id = global_index;
+//         global_map[this.request_id] = this;
+//         global_index++;
+//         var message = {};
+//         message.id = this.request_id;
+//         message.data = data;
+//         message.method = this.open_arguments[0];
+//         message.url = this.open_arguments[1];
+//         message.headers = this._headers;
+//         window.webkit.messageHandlers.IMYXHR.postMessage(message)
+//     };
+//     hookAjax.prototype.callbackNative = function (message) {
+//         if (!this.is_abort) {
+//             this.status = message.status;
+//             this.responseText = (!!message.data) ? message.data : "";
+//             this.responseHeaders = message.headers;
+//             this.readyState = 4
+//         } else {
+//             this.readyState = 1
+//         }
+//         this.callbackStateChanged();
+//     };
+
+//     window.imy_hookAjax = function () {
+//         XMLHttpRequest = hookAjax
+//     };
+//     window.imy_unhookAjax = function () {
+//         XMLHttpRequest = window.imy_realxhr
+//     }
+// });
 
