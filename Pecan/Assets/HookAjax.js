@@ -133,11 +133,11 @@
             var callbackID = 'cb_' + (uniqueId++) + '_' + new Date().getTime();
 
             var message = {};
-            message.id = hookAjax.request_id;
             message.data = params;
             message.method = hookAjax.open_arguments[0];
             message.url = hookAjax.open_arguments[1];
             message.headers = hookAjax._headers;
+            message.callbackID = callbackID;
 
             AjaxBridgeEvent.addHandler(callbackID,'stateChange',(callbackMessage)=>{
                 if (!hookAjax.is_abort) {
