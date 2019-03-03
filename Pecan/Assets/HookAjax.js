@@ -1,7 +1,10 @@
+
 (function () {
     if (window.realXMLHttpRequest) {
         return
     }
+    var uniqueId = 1;
+
 
     window.realXMLHttpRequest = XMLHttpRequest;
 
@@ -32,7 +35,27 @@
         this._headers[name] = value
     };
     hookAjax.prototype.send = function () {
-        AjaxBridge.callNative(this,arguments)
+        var taskName = 'task_' + (uniqueId++) + '_' + new Date().getTime();
+        this.taskName = taskName;
+
+        var message = {};
+        message.data = arguments;
+        message.method = this.open_arguments[0];
+        message.url = this.open_arguments[1];
+        message.headers = this._headers;
+
+        AjaxBridgeEvent.addHandler(taskName,'stateChange',(callbackMessage)=>{
+            if (!this.is_abort) {
+                this.status = callbackMessage.status;
+                this.responseText = (!!callbackMessage.data) ? callbackMessage.data : "";
+                this.responseHeaders = callbackMessage.headers;
+                this.readyState = 4
+            } else {
+                this.readyState = 1
+            }
+            this.callbackStateChanged();
+        })
+        AjaxBridge.callNative(taskName,'send',message)
     };
     hookAjax.prototype.callbackStateChanged = function () {
         if (this.readyState >= 3) {
@@ -54,10 +77,8 @@
         }
     };
     hookAjax.prototype.abort = function () {
+        AjaxBridge.callNative(this.taskName,'abort',{})
         this.is_abort = true;
-        if (this._xhr) {
-            this._xhr.abort()
-        }
         if (this.onabort) {
             this.onabort()
         }
@@ -91,18 +112,18 @@
 
     var AjaxBridgeEvent = {
         _handlers: {},
-        addHandler: function (handlerID, action, handler) {
-            if (typeof handlerID === 'string' && typeof handler === 'function') {
-                var handlerObject = this._handlers[handlerID];
+        addHandler: function (taskName, action, handler) {
+            if (typeof taskName === 'string' && typeof handler === 'function') {
+                var handlerObject = this._handlers[taskName];
                 if (typeof handlerObject !== 'object') {
                     handlerObject = {};
-                    this._handlers[handlerID] = handlerObject;
+                    this._handlers[taskName] = handlerObject;
                 }
                 handlerObject[action] = handler
             }
         },
-        execHandler: function (handlerID, handlerAction, params) {
-            var handler = this._handlers[handlerID];
+        execHandler: function (taskName, handlerAction, params) {
+            var handler = this._handlers[taskName];
             if (typeof handler === 'object') {
                 var action = handler[handlerAction];
                 if (typeof action === 'function') {
@@ -110,9 +131,9 @@
                 }
             }
         },
-        removeHandler: function (handlerID) {
-            if (typeof handlerID === 'string') {
-                delete this._handlers[handlerID];
+        removeHandler: function (taskName) {
+            if (typeof taskName === 'string') {
+                delete this._handlers[taskName];
             }
         },
         removeAllHandler: function () {
@@ -126,96 +147,26 @@
     if (window.AjaxBridge) {
         return
     }
-    var uniqueId = 1;
-
     var AjaxBridge = {
-        callNative: (hookAjax,params) => {
-            var callbackID = 'cb_' + (uniqueId++) + '_' + new Date().getTime();
+        callNative:(taskName,action,params) => {
 
             var message = {};
-            message.data = params;
-            message.method = hookAjax.open_arguments[0];
-            message.url = hookAjax.open_arguments[1];
-            message.headers = hookAjax._headers;
-            message.callbackID = callbackID;
-
-            AjaxBridgeEvent.addHandler(callbackID,'stateChange',(callbackMessage)=>{
-                if (!hookAjax.is_abort) {
-                    hookAjax.status = callbackMessage.status;
-                    hookAjax.responseText = (!!callbackMessage.data) ? callbackMessage.data : "";
-                    hookAjax.responseHeaders = callbackMessage.headers;
-                    hookAjax.readyState = 4
-                } else {
-                    hookAjax.readyState = 1
-                }
-                hookAjax.callbackStateChanged();
-            })
-            
+            message.taskName = taskName;
+            message.action = action;
+            message.params = params;
             var msgJSON = JSON.stringify(message);
             try {
                 window.webkit.messageHandlers.PecanProxy_1518040A.postMessage(msgJSON);
             } catch (error) {
                 console.log('WKWebView post message');
             }
-          
-
         },
-        callJS: (handlerID, action, params) => {
-            AjaxBridgeEvent.execHandler(handlerID, action, params);
+        callJS: (taskName, action, params) => {
+            AjaxBridgeEvent.execHandler(taskName, action, params);
         },
-        removeCallback: (handlerID) => {
-            AjaxBridgeEvent.removeHandler(handlerID);
+        removeCallback: (taskName) => {
+            AjaxBridgeEvent.removeHandler(taskName);
         }
     }
     window.AjaxBridge = AjaxBridge
 })()
-
-// (function () {
-//     if (window.imy_realxhr) {
-//         return
-//     }
-//     window.imy_realxhr = XMLHttpRequest;
-//     var timestamp = new Date().getTime();
-//     timestamp = parseInt((timestamp / 1000) % 100000);
-//     var global_index = timestamp + 1;
-//     var global_map = {};
-//     window.imy_realxhr_callback = function (id, message) {
-//         var hookAjax = global_map[id];
-//         if (hookAjax) {
-//             hookAjax.callbackNative(message)
-//         }
-//         global_map[id] = null
-//     };
-
-//     hookAjax.prototype.sendNative = function (data) {
-//         this.request_id = global_index;
-//         global_map[this.request_id] = this;
-//         global_index++;
-//         var message = {};
-//         message.id = this.request_id;
-//         message.data = data;
-//         message.method = this.open_arguments[0];
-//         message.url = this.open_arguments[1];
-//         message.headers = this._headers;
-//         window.webkit.messageHandlers.IMYXHR.postMessage(message)
-//     };
-//     hookAjax.prototype.callbackNative = function (message) {
-//         if (!this.is_abort) {
-//             this.status = message.status;
-//             this.responseText = (!!message.data) ? message.data : "";
-//             this.responseHeaders = message.headers;
-//             this.readyState = 4
-//         } else {
-//             this.readyState = 1
-//         }
-//         this.callbackStateChanged();
-//     };
-
-//     window.imy_hookAjax = function () {
-//         XMLHttpRequest = hookAjax
-//     };
-//     window.imy_unhookAjax = function () {
-//         XMLHttpRequest = window.imy_realxhr
-//     }
-// });
-

@@ -13,27 +13,47 @@ extension Dictionary: Dictable {}
 
 typealias Dict = Dictionary<String, Any>
 
-struct AjaxMessage : HandyJSON{
-    var callbackID : String?
-    var method : String?
-    var url : String?
-    var headers: Dict?
-    var data : Dict?
+enum AjaxAction : String, HandyJSONEnum{
+    case send = "send"
+    case abort = "abort"
 }
 
+struct AjaxMessage : HandyJSON {
+    var taskName : String?
+    var action : AjaxAction?
+    var params : Dict?
+}
+
+var taskDict : [String : URLSessionTask] = [String : URLSessionTask]()
 
 class JSCenter {
     
-
-    
-//    static func callbackJS(callbackID:String, callbackParams : Any) {
-//
-//
-//        [webView evaluateJavaScript:compJS completionHandler:NULL];
-//
-//    }
-    
     static func proxyAjaxRequest(webVew:WebView, ajaxMessage:String) {
+        if let message : AjaxMessage = AjaxMessage.deserialize(from: ajaxMessage) {
+            if let taskName = message.taskName, let action = message.action {
+                //方法分发
+                switch action {
+                case .send:
+                    if let params = message.params {
+                        let urlStr : String = params["url"] as! String
+                        if let url : URL = URL(string: urlStr, relativeTo: webVew.url) {
+                            self.send(taskName: taskName, url: url, params: params, comp: {
+                                callbackMethod in
+                                DispatchQueue.main.async {
+                                    webVew.evaluateJavaScript(callbackMethod, completionHandler: nil)
+                                }
+                            })
+                        }
+                    }
+                case .abort:
+                    self.abort(taskName: taskName)
+                default:
+                    print("\(action) is temporarily not supported")
+                }
+            }
+        }
+        
+        
         /* ajaxMessage demo value
         {
             "data":{
@@ -46,66 +66,57 @@ class JSCenter {
             }
         }
         */
-        let message : AjaxMessage? = AjaxMessage.deserialize(from: ajaxMessage)
-        let url : URL? = URL(string: message?.url ?? "", relativeTo: webVew.url)
-        print(url)
-        
-        if url != nil {
-            var request : URLRequest = URLRequest(url: url!)
-            request.httpMethod = message?.method
-            request.allHTTPHeaderFields = message?.headers as? [String : String]
-            let  jsonData = try? JSONSerialization.data(withJSONObject: message?.data, options: .prettyPrinted)
-            request.httpBody = jsonData//?.base64EncodedData()
-            
-            let session : URLSession = URLSession(configuration: URLSessionConfiguration.default)
-            let task : URLSessionTask = session.dataTask(with: request) { (data : Data?, aResponse : URLResponse?, error : Error?) in
-                let response = aResponse as! HTTPURLResponse
-                if error != nil {
-                    
-                } else {
-                    let statusCode = response.statusCode
-                    let allHeaders = response.allHeaderFields
-//                    let responseText = String(data: data ?? Data(), encoding: .utf8)
-                    let responseText = String(decoding: data!, as: UTF8.self)
-
-                    let callbackDict : [String:Any] = [
-                        "status":statusCode,
-                        "data":responseText ,
-                        "headers":allHeaders
-                    ]
-                    
-                    let callbackData = try! JSONSerialization.data(withJSONObject: callbackDict, options: .prettyPrinted)
-                    let callbackParamsString = String(data: callbackData, encoding: .utf8)
-                    
-                    
-                    let callbackMethod = "AjaxBridge.callJS('\(message!.callbackID!)','stateChange',\(callbackParamsString!));"
-                    print(callbackMethod)
-
-                    
-                    DispatchQueue.main.async {
-                        webVew.evaluateJavaScript(callbackMethod, completionHandler: { (res : Any?, error:Error?) in
-                            print(error)
-                        })
-                    }
-
-                    
-                }
-            }
-            task.resume()
+    }
+    
+    static func abort(taskName:String) {
+        if let task : URLSessionTask = taskDict[taskName] {
+            task.cancel()
         }
+    }
+    
+    static func send(taskName:String, url : URL, params:[String:Any], comp:@escaping (String)->Void) {
+        var request : URLRequest = URLRequest(url: url)
+        request.httpMethod = params["method"] as? String
+        request.allHTTPHeaderFields = params["headers"] as? [String : String]
+        let  jsonData = try? JSONSerialization.data(withJSONObject: params["data"] ?? "", options: .prettyPrinted)
+        request.httpBody = jsonData//?.base64EncodedData()
         
         
-
-        
+        let session : URLSession = URLSession(configuration: URLSessionConfiguration.default)
+        let task : URLSessionTask = session.dataTask(with: request) { (data : Data?, aResponse : URLResponse?, error : Error?) in
+            if error != nil {
+                
+            } else {
+                let response = aResponse as! HTTPURLResponse
+                let statusCode = response.statusCode
+                let allHeaders = response.allHeaderFields
+                //                    let responseText = String(data: data ?? Data(), encoding: .utf8)
+                let responseText = String(decoding: data!, as: UTF8.self)
+                
+                let callbackDict : [String:Any] = [
+                    "status":statusCode,
+                    "data":responseText ,
+                    "headers":allHeaders
+                ]
+                
+                let callbackData = try! JSONSerialization.data(withJSONObject: callbackDict, options: .prettyPrinted)
+                let callbackParamsString = String(data: callbackData, encoding: .utf8)
+                
+                
+                let callbackMethod = "AjaxBridge.callJS('\(taskName)','stateChange',\(callbackParamsString!));"
+//                print(callbackMethod)
+                comp(callbackMethod)
+            }
+            //成功或失败后，task任务已完成，执行释放操作
+            taskDict[taskName] = nil
+        }
+        taskDict[taskName] = task
+        task.resume()
     }
 
+    
     static func disposePrompt(prompt:NSString, defaultText:NSString, completionHandler: @escaping (String?) -> Void) {
-        
-
         print(defaultText.length)
-        
         completionHandler(defaultText as String)
-        
     }
-
 }
