@@ -8,11 +8,6 @@
 import Foundation
 import HandyJSON
 
-protocol Dictable {}
-extension Dictionary: Dictable {}
-
-typealias Dict = Dictionary<String, Any>
-
 enum AjaxAction : String, HandyJSONEnum{
     case send = "send"
     case abort = "abort"
@@ -21,7 +16,7 @@ enum AjaxAction : String, HandyJSONEnum{
 struct AjaxMessage : HandyJSON {
     var taskName : String?
     var action : AjaxAction?
-    var params : Dict?
+    var params : Dictionary<String, Any>?
 }
 
 var taskDict : [String : URLSessionTask] = [String : URLSessionTask]()
