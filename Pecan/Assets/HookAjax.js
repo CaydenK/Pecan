@@ -84,23 +84,15 @@
         }
     };
     hookAjax.prototype.getAllResponseHeaders = function () {
-        if (this._xhr) {
-            return this._xhr.getAllResponseHeaders()
-        } else {
-            return this.responseHeaders
-        }
+        return this.responseHeaders
     };
     hookAjax.prototype.getResponseHeader = function (name) {
-        if (this._xhr) {
-            return this._xhr.getResponseHeader(name)
-        } else {
-            for (key in this.responseHeaders) {
-                if (key.toLowerCase() == name.toLowerCase()) {
-                    return this.responseHeaders[key]
-                }
+        for (key in this.responseHeaders) {
+            if (key.toLowerCase() == name.toLowerCase()) {
+                return this.responseHeaders[key]
             }
-            return null
         }
+        return null
     };
     XMLHttpRequest = hookAjax;
 })();
