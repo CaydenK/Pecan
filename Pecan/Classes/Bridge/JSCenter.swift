@@ -86,11 +86,25 @@ class JSCenter {
                 let statusCode = response.statusCode
                 let allHeaders = response.allHeaderFields
                 //                    let responseText = String(data: data ?? Data(), encoding: .utf8)
-                let responseText = String(decoding: data!, as: UTF8.self)
                 
+                var enc : UInt
+                if let contentType = allHeaders["Content-Type"] as? String {
+                    if contentType.contains("GB2312") {
+                        enc = String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(0x0632)).rawValue
+                    } else {
+                        enc = String.Encoding.utf8.rawValue
+                    }
+                } else {
+                    enc = String.Encoding.utf8.rawValue
+                }
+                
+//                let responseText = String(decoding: data!, as: UTF8.self)
+                let responseText = NSString(data: data!, encoding: enc)
+
+
                 let callbackDict : [String:Any] = [
                     "status":statusCode,
-                    "data":responseText ,
+                    "data":responseText ?? "" ,
                     "headers":allHeaders
                 ]
                 
