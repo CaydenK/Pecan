@@ -22,28 +22,35 @@
         }
 
         function testAjax() {
-            var xmlhttp;
+            var xhr;
             if (window.XMLHttpRequest)
             {// code for IE7+, Firefox, Chrome, Opera, Safari
-                xmlhttp=new XMLHttpRequest();
+                xhr=new XMLHttpRequest();
             }
             else
             {// code for IE6, IE5
-                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                xhr=new ActiveXObject("Microsoft.XMLHTTP");
             }
-            xmlhttp.onreadystatechange=function()
+            xhr.onreadystatechange=function()
             {
-                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                if (xhr.readyState==4 && xhr.status==200)
                 {
-                    document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+                    // document.getElementById("myDiv").innerHTML=xhr.responseText;
+                    var allheader = JSON.stringify(xhr.getAllResponseHeaders());
+
+                    var contentType = xhr.getResponseHeader("Content-Type");
+
+                    document.getElementById("myDiv").innerHTML=xhr.responseText 
+                    + "\n" + allheader 
+                    + "<p style='color:red;'>" + contentType + "</p>"
                 }
             }
-            xmlhttp.open("POST","http://www.w3school.com.cn/ajax/demo_post.asp",true);
-            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-            xmlhttp.send();
+            xhr.open("POST","http://www.w3school.com.cn/ajax/demo_post.asp",true);
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xhr.send();
             //测试abort函数
             // setTimeout(() => {
-            //     xmlhttp.abort();
+            //     xhr.abort();
             // }, 10);
         }
     </script>
