@@ -73,8 +73,11 @@ class JSCenter {
         var request : URLRequest = URLRequest(url: url)
         request.httpMethod = params["method"] as? String
         request.allHTTPHeaderFields = params["headers"] as? [String : String]
-        let  jsonData = try? JSONSerialization.data(withJSONObject: params["data"] ?? "", options: .prettyPrinted)
-        request.httpBody = jsonData//?.base64EncodedData()
+        request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/16A366", forHTTPHeaderField: "user-agent")
+        if request.httpMethod?.uppercased() == "POST" {
+            let  jsonData = try? JSONSerialization.data(withJSONObject: params["data"] ?? "", options: .prettyPrinted)
+            request.httpBody = jsonData//?.base64EncodedData()
+        }
         
         
         let session : URLSession = URLSession(configuration: URLSessionConfiguration.default)

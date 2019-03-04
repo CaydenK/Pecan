@@ -23,7 +23,11 @@ class ViewController: UIViewController,WKUIDelegate {
         ucc.addUserScript(us)
         webConfiguration.userContentController = ucc
         
-        let _webview = Pecan.WebView(frame: self.view.bounds, configuration: webConfiguration)
+        var bounds : CGRect = self.view.bounds;
+        bounds.origin.y += 64;
+        bounds.size.height -= 64;
+        
+        let _webview = Pecan.WebView(frame: bounds, configuration: webConfiguration)
         _webview.uiDelegate = self
         return _webview
     }()
@@ -31,10 +35,10 @@ class ViewController: UIViewController,WKUIDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(self.webview)
-        let url =  Bundle.main.url(forResource: "test", withExtension: "html")
-        let urlContent = try? String(contentsOf: url!)
-//        self.webview.load(URLRequest(url: URL(string: "https://www.baidu.com")!))
-        self.webview.loadHTMLString(urlContent!, baseURL: URL(string: "http://www.w3school.com.cn"))
+//        let url =  Bundle.main.url(forResource: "test", withExtension: "html")
+//        let urlContent = try? String(contentsOf: url!)
+        self.webview.load(URLRequest(url: URL(string: "https://www.taobao.com")!))
+//        self.webview.loadHTMLString(urlContent!, baseURL: URL(string: "http://www.w3school.com.cn"))
 
         print(self.webview.uiDelegate as Any)
     }
