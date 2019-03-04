@@ -84,7 +84,11 @@
         }
     };
     hookAjax.prototype.getAllResponseHeaders = function () {
-        return this.responseHeaders
+        var allResponseHeaders = "";
+        for (var headerKey in this.responseHeaders){
+            allResponseHeaders += headerKey + ":" + this.responseHeaders[headerKey] + " ";
+        }
+        return allResponseHeaders;
     };
     hookAjax.prototype.getResponseHeader = function (name) {
         for (key in this.responseHeaders) {
