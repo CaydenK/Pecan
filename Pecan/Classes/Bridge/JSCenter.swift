@@ -71,10 +71,10 @@ class JSCenter {
     
     static func send(taskName:String, url : URL, params:[String:Any], comp:@escaping (String)->Void) {
         var request : URLRequest = URLRequest(url: url)
-        request.httpMethod = params["method"] as? String
+        request.httpMethod = (params["method"] as? String)?.uppercased()
         request.allHTTPHeaderFields = params["headers"] as? [String : String]
         request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/16A366", forHTTPHeaderField: "user-agent")
-        if request.httpMethod?.uppercased() == "POST" {
+        if request.httpMethod == "POST" {
             let  jsonData = try? JSONSerialization.data(withJSONObject: params["data"] ?? "", options: .prettyPrinted)
             request.httpBody = jsonData//?.base64EncodedData()
         }
